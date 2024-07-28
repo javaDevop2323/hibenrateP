@@ -9,7 +9,8 @@ import com.beksons.service.AgencyService;
 import java.util.List;
 
 public class AgencyServiceImpl implements AgencyService {
-    final AgencyDao agencyDao  = new AgencyDaoImpl();
+    private final AgencyDao agencyDao  = new AgencyDaoImpl();
+
 
     @Override
     public void saveAgency(Agency agency, Address address) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class HouseServiceImpl implements HouseService {
 
-    HouseDao houseDao = new HouseDaoImpl();
+private final HouseDao houseDao = new HouseDaoImpl();
     @Override
     public void createHouse(Long ownerId, House house) {
         houseDao.createHouse(ownerId,house);
@@ -22,22 +22,17 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public List<House> getHouseByRegion() {
-        return houseDao.getHouseByRegion();
-    }
-
-    @Override
-    public House getHouseByRegion(String region) {
-        return null;
+    public List<House> getHouseByRegion(String region) {
+        return houseDao.getAllHouseByRegion(region);
     }
 
     @Override
     public List<House> getHouseByAgencyId(Long id) {
-        return null;
+        return houseDao.getHouseByAgencyId(id);
     }
 
     @Override
     public List<House> getHouseByOwnerId(Long ownerId) {
-        return null;
+        return List.of();
     }
 }

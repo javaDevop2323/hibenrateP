@@ -7,35 +7,29 @@ import com.beksons.entities.Address;
 import com.beksons.entities.Agency;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.transaction.Transactional;
-import org.hibernate.Transaction;
-import org.hibernate.engine.transaction.internal.TransactionImpl;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.HibernateException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class AddressDaoImpl implements AddressDao {
+public class AddressDaoImpl implements AddressDao, AutoCloseable {
     private final EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
 
     @Override
     public Optional<Address> getAddressById(Long addressId) {
-        Address address = null;
-        EntityManager entityManager = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
+        Address found = null;
+        try (final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
-            address = entityManager.createQuery(" select  a from Address a where a.id = :addressId", Address.class)
-                    .setParameter("addressId", addressId)
-                    .getSingleResult();
+            found = entityManager.find(Address.class, addressId);
+            found = Optional.of(found).orElseThrow(() -> new EntityNotFoundException("not found"));
             entityManager.getTransaction().commit();
-        }catch (Exception e){
-            if(entityManager.getTransaction().isActive()){
-                entityManager.getTransaction().rollback();
-            }
+            return Optional.of(found);
         }
-        return Optional.ofNullable(address);
+
+
     }
 
     @Override
@@ -58,6 +52,7 @@ public class AddressDaoImpl implements AddressDao {
         }
         return getAll;
     }
+
     @Override
     public int getCountAgenciesByCity(String city) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -112,6 +107,15 @@ public class AddressDaoImpl implements AddressDao {
             return e.getMessage();
         } finally {
             entityManager.close();
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            entityManagerFactory.close();
+        }catch (HibernateException e){
+            System.out.println(e.getMessage());
         }
     }
 }

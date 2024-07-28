@@ -4,18 +4,26 @@ import com.beksons.entities.Customer;
 import com.beksons.entities.RentInfo;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 public interface CustomerDao {
 
-    String saveCustomer(Customer newCustomer);
+    String saveCustomer(Customer customer);
 
-    String createCustomer(Customer customer, RentInfo rentInfo);
-
-    void rentHouse(Long clientId, Long houseId, Long agencyId, LocalDate rentDate);
-
-    String deleteCustomer(Long id);
+    String saveCustomerWithRentInfo(Customer customer , Long houseId, Long agencyId, LocalDate checkIn, LocalDate checkOut);
 
 
+    List<Customer> getAllCustomers();
+
+
+    Optional<Customer> getCustomerById(Long customerId);
+
+
+    String updateCustomer(Long customerId, Customer newCustomer);
+
+
+    String deleteCustomer(Long customerId);
 
 
 

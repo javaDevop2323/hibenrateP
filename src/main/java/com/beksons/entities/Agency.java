@@ -24,11 +24,19 @@ public class Agency {
     private String phoneNumber;
     @OneToOne(mappedBy = "agency",cascade = {PERSIST,DETACH,REMOVE})
     private Address address;
-    @ManyToMany(mappedBy = "agencies")
+    @ManyToMany(mappedBy = "agencies",fetch = FetchType.EAGER,cascade = {REFRESH,DETACH,MERGE})
     private List<Owner>owners;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<RentInfo>rentInfos;
 
+    public Agency(String name, String phoneNumber, Address address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
-
+    public Agency(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 }

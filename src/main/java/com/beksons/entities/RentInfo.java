@@ -22,10 +22,16 @@ public class RentInfo {
     private LocalDate checkIn;
     private LocalDate checkOut;
 
-    @OneToMany(mappedBy = "rentInfo")
-    private List<Owner> owners;
+    @ManyToOne
+    private Owner owner;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne
+    private Agency agency;
+
+    @OneToOne
+    private House house;
 }

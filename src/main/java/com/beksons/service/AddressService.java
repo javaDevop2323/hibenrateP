@@ -5,11 +5,22 @@ import com.beksons.entities.Agency;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface AddressService {
-    Address getAddressAndAgency(Long id);
+    Optional<Address> getAddressById(Long addressId);
 
-    int  countAgency(String word);
 
-    Map<String, List<Agency>> groupByRegion();
+    Map<Address,Agency> getAllAddressWithAgency();
+
+
+    int getCountAgenciesByCity(String city);
+
+
+    Map<String, List<Agency>> getAllRegionWithAgency();
+
+
+    String updateAddress(Long oldAddressId, Address newAddress);
+
+
 }

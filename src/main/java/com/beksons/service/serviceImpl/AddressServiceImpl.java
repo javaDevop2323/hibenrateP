@@ -8,21 +8,33 @@ import com.beksons.service.AddressService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AddressServiceImpl implements AddressService {
-   final AddressDao addressDao = new AddressDaoImpl();
+    final AddressDao addressDao = new AddressDaoImpl();
+
     @Override
-    public Address getAddressAndAgency(Long id) {
-        return null;
+    public Optional<Address> getAddressById(Long addressId) {
+        return addressDao.getAddressById(addressId);
     }
 
     @Override
-    public int countAgency(String word) {
-        return addressDao.countAgency(word);
+    public Map<Address, Agency> getAllAddressWithAgency() {
+        return addressDao.getAllAddressWithAgency();
     }
 
     @Override
-    public Map<String, List<Agency>> groupByRegion() {
-        return null;
+    public int getCountAgenciesByCity(String city) {
+        return addressDao.getCountAgenciesByCity(city);
+    }
+
+    @Override
+    public Map<String, List<Agency>> getAllRegionWithAgency() {
+        return Map.of();
+    }
+
+    @Override
+    public String updateAddress(Long oldAddressId, Address newAddress) {
+        return addressDao.updateAddress(oldAddressId,newAddress);
     }
 }

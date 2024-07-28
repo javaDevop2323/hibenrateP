@@ -3,8 +3,6 @@ package com.beksons.doa;
 import com.beksons.entities.House;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface HouseDao {
 
@@ -12,9 +10,7 @@ public interface HouseDao {
 
     String deleteHouse(Long houseId);
 
-    List<House> getHouseByRegion();
-
-    Optional<House> getHouseByRegion(String region);
+    List<House> getAllHouseByRegion(String region);
 
     List<House> getHouseByAgencyId(Long id);
 

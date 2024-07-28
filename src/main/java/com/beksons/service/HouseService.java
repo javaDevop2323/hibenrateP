@@ -11,9 +11,8 @@ public interface HouseService {
 
     String deleteHouse(Long houseId);
 
-    List<House> getHouseByRegion();
+    List<House> getHouseByRegion(String region);
 
-    House getHouseByRegion(String region);
 
     List<House> getHouseByAgencyId(Long id);
 

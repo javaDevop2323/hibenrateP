@@ -1,32 +1,33 @@
 package com.beksons.doa;
 
+import com.beksons.dto.OwnerResponse;
 import com.beksons.entities.House;
 import com.beksons.entities.Owner;
 
 import java.util.List;
 
 public interface OwnerDao {
-//    CRUD
-    void saveOwner(Owner owner);
+    //    CRUD
 
-    void saveOwnerAndHouse(Owner owner , House house);
-
-    String assignOwnerToAgency(Long ownerId,Long agencyId);
-
-    List<Owner>  getOwnersByAgencyID(Long agencyID);
+    String saveOwner(Owner owner);
 
 
-    String deleteOwnerByID(Long ownerID);
-
-    List<Owner> getOwnersByAgencyByID(Long agencyId);
-
-    List<Owner> getOwnerAgeAndName();
+    String saveOwnerWithHouse(Owner owner, House house);
 
 
+    String assignOwnerToAgency(Long ownerId, Long agencyId);
 
 
+    String deleteOwner(Long ownerId);
 
 
+     List<Owner> getOwnersByAgencyId(Long agencyId);
+
+
+    List<Owner> getAllOwners();
+
+
+    String updateOwner(Long ownerId, Owner newOwner);
 
 
 }
