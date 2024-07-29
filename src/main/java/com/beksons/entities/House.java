@@ -27,9 +27,16 @@ public class House {
     private String description;
     private int room;
     private boolean furniture;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH})
+    @ManyToOne(cascade = {
+            PERSIST,
+            MERGE,
+            REFRESH,
+            DETACH})
     private Owner owner;
-    @OneToOne(cascade = {REMOVE, MERGE, REFRESH})
+    @OneToOne(cascade =
+            {REMOVE,
+            MERGE,
+            REFRESH})
     private Address address;
 
 

@@ -33,12 +33,14 @@ public class Owner {
     @Column(name = "last_name")
     private String lastName;
     private String email;
+
     private LocalDate dateOfBirth;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
 
     @ToString.Exclude
-    @ManyToMany()
+    @ManyToMany(cascade = {DETACH,MERGE,REFRESH})
     private List<Agency> agencies;
     @ToString.Exclude
     @OneToMany(mappedBy = "owner", cascade = {
@@ -65,6 +67,16 @@ public class Owner {
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+
+    }
+
+    public Owner(String firstName, String lastName, LocalDate dateOfBirth, Gender gender) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+
+
     }
 }
 

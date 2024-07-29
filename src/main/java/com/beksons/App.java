@@ -1,5 +1,6 @@
 package com.beksons;
 
+import com.beksons.config.HibernateUtil;
 import com.beksons.entities.*;
 import com.beksons.enums.FamilyStatus;
 import com.beksons.enums.Gender;
@@ -48,12 +49,12 @@ public class App {
                                 case 1 -> {
                                     Address address = Address.builder()
                                             .city("Bishkek")
-                                            .region("osh")
-                                            .street("grajadnskaya")
+                                            .region("chy")
+                                            .street("grajdanskaya")
                                             .build();
                                     Agency agency = Agency.builder()
-                                            .name("ds")
-                                            .phoneNumber("+996121231111")
+                                            .name("agent")
+                                            .phoneNumber("+996123123121")
                                             .address(address)
                                             .build();
                                     agencyService.saveAgency(agency, address);
@@ -68,7 +69,7 @@ public class App {
                                     System.out.println(agencyService.updateAgencyByID(1L, new Agency("sultanIsaevs", "931231")));
                                 }
                                 case 5 -> {
-                                    agencyService.deleteAgency(4L);
+                                    agencyService.deleteAgency(2L);
                                 }
                                 case 6 -> {
                                     agencyExit = false;
@@ -93,13 +94,13 @@ public class App {
                         try {
                             switch (new Scanner(System.in).nextInt()) {
                                 case 1 -> {
-                                    System.out.println(addressService.getAddressById(3L));
+                                    System.out.println(addressService.getAddressById(1L));
                                 }
                                 case 2 -> {
                                     System.out.println(addressService.getAllAddressWithAgency());
                                 }
                                 case 3 -> {
-                                    System.out.println(addressService.getCountAgenciesByCity("Bishkek"));
+                                    System.out.println(addressService.getCountAgenciesByCity("1"));
                                 }
                                 case 4 -> {
                                     System.out.println(addressService.getAllRegionWithAgency());
@@ -123,12 +124,11 @@ public class App {
                         System.out.println("""
                                 1.saveCustomer
                                 2.saveCustomerWithRentInfo
-                                3.assignRentInfoToCustomer
-                                4.getAllCustomers
+                                3.getAllCustomers
                                 5.getCustomerById
-                                6.updateCustomer
-                                7.deleteCustomer
-                                8.Exit
+                                5.updateCustomer
+                                6.deleteCustomer
+                                7.Exit
                                 """);
                         switch (new Scanner(System.in).nextInt()) {
                             case 1 -> {
@@ -146,13 +146,23 @@ public class App {
                                 System.out.println(customerService.saveCustomerWithRentInfo(customer, 1L, 1L, LocalDate.of(2020, 2, 2), LocalDate.of(2024, 2, 2)));
                             }
                             case 3 -> {
-                                customerService.assignRentInfoToCustomer(new RentInfo(), 1L, 1L, 1L);
-                            }
-                            case 4 -> {
                                 System.out.println(customerService.getAllCustomers());
                             }
-                            case 5 -> {
+                            case 4 -> {
                                 System.out.println(customerService.getCustomerById(1L));
+                            }
+                            case 5 -> {
+                                Customer newCustomer =
+                                        Customer.builder()
+                                                .firstName("Nurdan")
+                                                .lastName("Nurmatov")
+                                                .nationality("Kyrgyz")
+                                                .email("nurdan@gmail.com")
+                                                .dateOfBirth(LocalDate.of(2003,3,3))
+                                                .gender(Gender.MALE)
+                                                .familyStatus(FamilyStatus.SINGLE)
+                                                .build();
+                                System.out.println(customerService.updateCustomer(1L, newCustomer));
                             }
                             case 6 -> {
                                 customerExit = false;
@@ -208,22 +218,22 @@ public class App {
                                   1.saveOwner
                                   2.saveOwnerWithHouse
                                   3.assignOwnerToAgency
-                                  4.getOwnersByAgencyID
-                                  5.deleteOwnerByID
-                                  6.getOwnersByAgencyByID
-                                  7.getOwnerAgeAndName
-                                8.Exit
+                                  4.deleteOwner
+                                  5.getOwnersByAgencyId
+                                  6.getAllOwners
+                                  7.updateOwner
+                                  8.Exit
                                   """);
                         switch (new Scanner(System.in).nextInt()) {
                             case 1 -> {
                                 Owner owner = null;
-                                 owner = new Owner("joomart", "Ishenbaev", "jomart@gmail.com",LocalDate.of(2003, 3, 3), Gender.MALE);
+                                 owner = new Owner("joomart", "Ishenbaev","joomart@gmail.com",LocalDate.of(2003, 3, 3), Gender.MALE);
                                  ownerService.saveOwner(owner);
 
                             }
                             case 2 -> {
                                 Owner owner = null;
-                                 owner = new Owner("joomart", "Ishenbaev", "jomart@gmail.com", owner.getFirstName()+' '+ owner.getLastName(),LocalDate.of(2003, 3, 3), Gender.MALE);
+                                 owner = new Owner("joomart", "Ishenbaev", "jomart@gmail.com",LocalDate.of(2003, 3, 3), Gender.MALE);
                                 House house = new House(HouseType.DETACHED, BigDecimal.valueOf(6000), 5.2, "good house", 2, false);
                                 System.out.println(ownerService.saveOwnerWithHouse(owner, house));
                             }
@@ -231,11 +241,16 @@ public class App {
                                 System.out.println(ownerService.assignOwnerToAgency(1L, 2L));
 
                             }case 4->{
-                                System.out.println(ownerService.getOwnersByAgencyId(2L));
+                                System.out.println(ownerService.deleteOwner(1L));
                             }case 5->{
-                                System.out.println(ownerService.getAllOwners());
+                                System.out.println(ownerService.getOwnersByAgencyId(1L));
                             }case 6->{
-
+                                System.out.println(ownerService.getAllOwners());
+                            }
+                            case 7->{
+                                exitOwner = false;
+                            }default -> {
+                                System.out.println("INCORRECT CHOICE");
                             }
                         }
                     }

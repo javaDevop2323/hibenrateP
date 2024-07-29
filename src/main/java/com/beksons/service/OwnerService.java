@@ -1,6 +1,5 @@
 package com.beksons.service;
 
-import com.beksons.dto.OwnerResponse;
 import com.beksons.entities.House;
 import com.beksons.entities.Owner;
 

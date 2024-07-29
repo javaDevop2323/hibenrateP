@@ -4,10 +4,13 @@ import com.beksons.config.HibernateUtil;
 import com.beksons.doa.AgencyDao;
 import com.beksons.entities.Address;
 import com.beksons.entities.Agency;
+import com.beksons.entities.RentInfo;
 import jakarta.persistence.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class AgencyDaoImpl implements AgencyDao {
     private final EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
@@ -36,7 +39,6 @@ public class AgencyDaoImpl implements AgencyDao {
             address.setAgency(agency);
             entityManager.persist(agency);
             entityManager.getTransaction().commit();
-
         } catch (IllegalArgumentException e) {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
@@ -109,7 +111,11 @@ public class AgencyDaoImpl implements AgencyDao {
         try {
             entityManager.getTransaction().begin();
             final Agency agency = entityManager.find(Agency.class, id);
-            entityManager.remove(agency);
+             List<RentInfo> rentInfos = agency.getRentInfos();
+             Address address = agency.getAddress();
+             agency.getRentInfos().remove(rentInfos);
+             entityManager.remove(address);
+             entityManager.remove(address);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

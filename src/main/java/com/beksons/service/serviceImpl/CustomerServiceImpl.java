@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerServiceImpl implements CustomerService {
-    CustomerDao customerDao = new CustomerDaoImpl();
+   private final CustomerDao customerDao = new CustomerDaoImpl();
     @Override
     public String saveCustomer(Customer customer) {
      return  customerDao.saveCustomer(customer);
@@ -22,11 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public String saveCustomerWithRentInfo(Customer customer, Long houseId, Long agencyId, LocalDate checkIn, LocalDate checkOut) {
         return customerDao.saveCustomerWithRentInfo(customer,houseId,agencyId,checkIn,checkOut);
-    }
 
-    @Override
-    public String assignRentInfoToCustomer(RentInfo rentInfo, Long customerId, Long houseId, Long agencyId) {
-        return "";
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.beksons.doa.daoImpl;
 
 import com.beksons.config.HibernateUtil;
-import com.beksons.doa.RetInfoDaoImpl;
+import com.beksons.doa.RetInfoDao;
 import com.beksons.entities.RentInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RetInfoDaoImplImpl implements RetInfoDaoImpl, AutoCloseable {
+public class RetInfoDaoImplImpl implements RetInfoDao, AutoCloseable {
     private final EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
 
     @Override
@@ -37,7 +37,7 @@ public class RetInfoDaoImplImpl implements RetInfoDaoImpl, AutoCloseable {
         try {
             entityManager.getTransaction().begin();
             countHouse = entityManager.createQuery("""
-                            select count(r) from RentInfo r
+                            select count(r.id) from RentInfo r
                             where r.agency.id =:agencyId and r.checkIn <=:currentDate
                             and r.checkOut >=:currentDate
                             """, Long.class)

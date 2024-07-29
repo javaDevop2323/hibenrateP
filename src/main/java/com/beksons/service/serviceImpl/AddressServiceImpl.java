@@ -9,9 +9,8 @@ import com.beksons.service.AddressService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 public class AddressServiceImpl implements AddressService {
-    final AddressDao addressDao = new AddressDaoImpl();
+    private final AddressDao addressDao = new AddressDaoImpl();
 
     @Override
     public Optional<Address> getAddressById(Long addressId) {
@@ -30,7 +29,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Map<String, List<Agency>> getAllRegionWithAgency() {
-        return Map.of();
+        return addressDao.getAllRegionWithAgency();
     }
 
     @Override

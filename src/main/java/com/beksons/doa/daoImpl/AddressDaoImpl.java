@@ -8,24 +8,22 @@ import com.beksons.entities.Agency;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 public class AddressDaoImpl implements AddressDao, AutoCloseable {
     private final EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
 
     @Override
     public Optional<Address> getAddressById(Long addressId) {
-        Address found = null;
+
         try (final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            entityManager.getTransaction().begin();
-            found = entityManager.find(Address.class, addressId);
-            found = Optional.of(found).orElseThrow(() -> new EntityNotFoundException("not found"));
-            entityManager.getTransaction().commit();
+          Address   found = entityManager.find(Address.class, addressId);
+             found = Optional.of(found).orElse(null);
             return Optional.of(found);
         }
 
@@ -37,16 +35,14 @@ public class AddressDaoImpl implements AddressDao, AutoCloseable {
         Map<Address, Agency> getAll = new HashMap<>();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            entityManager.getTransaction().begin();
-            List<Address> addresses = entityManager.createQuery("select s from Address s inner join Agency a on s.id = a.id", Address.class)
-                    .getResultList();
+            List<Address> addresses = entityManager.createQuery(
+                    "select ad FROM Address ad where ad.agency is not null", Address.class
+            ).getResultList();
             for (Address address : addresses) {
                 getAll.put(address, address.getAgency());
             }
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             System.out.println(e.getMessage());
-            entityManager.getTransaction().rollback();
         } finally {
             entityManager.close();
         }
@@ -58,10 +54,8 @@ public class AddressDaoImpl implements AddressDao, AutoCloseable {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         int count = 0;
         try {
-            entityManager.getTransaction().begin();
             count = entityManager.createQuery("select count(ag.id) from Agency ag inner join Address ad on ag.id = ad.id where ad.city = :city", Long.class)
                     .setParameter("city", city).getSingleResult().intValue();
-            entityManager.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -82,7 +76,6 @@ public class AddressDaoImpl implements AddressDao, AutoCloseable {
             for (Address address : addresses) {
                 allRegionWithAgency.put(address.getRegion(), agencies);
             }
-            entityManager.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {

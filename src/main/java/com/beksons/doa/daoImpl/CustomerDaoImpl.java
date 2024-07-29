@@ -5,13 +5,15 @@ import com.beksons.doa.CustomerDao;
 import com.beksons.entities.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.HibernateException;
+import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerDaoImpl implements CustomerDao {
+public class CustomerDaoImpl implements CustomerDao, AutoCloseable {
     private final EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
 
 
@@ -22,7 +24,7 @@ public class CustomerDaoImpl implements CustomerDao {
             entityManager.persist(customer);
             entityManager.getTransaction().commit();
         } catch (HibernateException e) {
-            return e.getMessage();
+            System.out.println(e.getMessage());
         }
 
         return "Success";
@@ -35,7 +37,7 @@ public class CustomerDaoImpl implements CustomerDao {
             entityManager.getTransaction().begin();
             Agency agency = entityManager.find(Agency.class, agencyId);
             House house = entityManager.find(House.class, houseId);
-            if (!checkHouseRent(entityManager,houseId, checkIn, checkOut)){
+            if (!checkHouseRent(entityManager, houseId, checkIn, checkOut)) {
                 entityManager.getTransaction().rollback();
                 return "error";
             }
@@ -62,39 +64,37 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public List<Customer> getAllCustomers() {
-        final EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Customer> customers = null;
-        try {
-            entityManager.getTransaction().begin();
-            customers = entityManager.createQuery("select c from  Customer c ", Customer.class).getResultList();
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
+        try (final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            try {
+                customers = entityManager.createQuery("select c from  Customer c ", Customer.class).getResultList();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (HibernateException e) {
             System.out.println(e.getMessage());
         }
-
         return customers;
     }
 
     @Override
     public Optional<Customer> getCustomerById(Long customerId) {
-        final EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Customer customer = null;
-        try {
-            entityManager.getTransaction().begin();
-            customer = entityManager.find(Customer.class, customerId);
-            entityManager.getTransaction().commit();
-            return Optional.of(customer);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            Customer customer = null;
+            try {
+                customer = entityManager.find(Customer.class, customerId);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            return Optional.ofNullable(customer);
         }
-        assert customer != null;
-        return Optional.of(customer);
     }
 
     @Override
     public String updateCustomer(Long customerId, Customer newCustomer) {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
+            entityManager.getTransaction().begin();
             entityManager.createQuery("update Customer c set c.firstName = :firstName," +
                             "  c.lastName = :lastName, " +
                             "c.email = :email ,c.nationality = :nationality,c.dateOfBirth " +
@@ -128,7 +128,6 @@ public class CustomerDaoImpl implements CustomerDao {
                         entityManager.getTransaction().rollback();
                         return "customer has active rentInfo";
                     }
-                    House house = rentInfo.getHouse();
 
                     Owner owner = rentInfo.getOwner();
                     owner.getRentInfos().remove(rentInfo);
@@ -162,4 +161,8 @@ public class CustomerDaoImpl implements CustomerDao {
         return count == 0;
     }
 
+    @Override
+    public void close() throws Exception {
+        entityManagerFactory.close();
+    }
 }

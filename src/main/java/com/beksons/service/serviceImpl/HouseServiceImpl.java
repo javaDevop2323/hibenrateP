@@ -33,6 +33,6 @@ private final HouseDao houseDao = new HouseDaoImpl();
 
     @Override
     public List<House> getHouseByOwnerId(Long ownerId) {
-        return List.of();
+        return houseDao.getHouseByOwnerId(ownerId);
     }
 }

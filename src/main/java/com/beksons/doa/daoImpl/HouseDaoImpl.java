@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueObjectException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HouseDaoImpl implements HouseDao {
@@ -21,7 +22,6 @@ public class HouseDaoImpl implements HouseDao {
         try {
             entityManager.getTransaction().begin();
             Owner foundOwner = entityManager.find(Owner.class, ownerId);
-
             if (foundOwner != null) {
                 house.setOwner(foundOwner);
                 entityManager.persist(house);
@@ -29,6 +29,7 @@ public class HouseDaoImpl implements HouseDao {
                 entityManager.merge(foundOwner);
             } else {
                 System.out.println("Owner with ID " + ownerId + " not found.");
+                entityManager.getTransaction().rollback();
             }
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -46,15 +47,29 @@ public class HouseDaoImpl implements HouseDao {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            Long count = (Long) entityManager.createQuery(
+                            "select count(r) from RentInfo r where r.house.id = :houseId")
+                    .setParameter("houseId", houseId)
+                    .getSingleResult();
+
+            if (count > 0) {
+                entityManager.getTransaction().rollback();
+                return "House has active rentInfo records and cannot be deleted";
+            }
             entityManager.createQuery("delete from House h where h.id = :houseId")
                     .setParameter("houseId", houseId)
                     .executeUpdate();
+
             entityManager.getTransaction().commit();
         } catch (HibernateException e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
             return e.getMessage();
+        } finally {
+            entityManager.close();
         }
         return "success";
-
     }
 
     @Override
@@ -76,6 +91,13 @@ public class HouseDaoImpl implements HouseDao {
 
     @Override
     public List<House> getHouseByOwnerId(Long ownerId) {
-        return List.of();
+      try(  final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+     return    entityManager.createQuery("select h from House h join h.owner o where o.id = ?1", House.class)
+                  .setParameter(1, ownerId).
+                  getResultList();
+      }catch (HibernateException exception){
+          System.out.println(exception.getMessage());
+      }
+        return new ArrayList<>();
     }
 }

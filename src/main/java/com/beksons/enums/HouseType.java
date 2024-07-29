@@ -8,5 +8,6 @@ public enum HouseType {
     APARTMENT,
     COTTAGE,
     VILLA,
-    MANSION;
+
+
 }

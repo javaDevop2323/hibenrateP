@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -13,21 +14,33 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "address")
+@ToString
 public class Agency {
 
     @Id
-    @GeneratedValue(generator = "agency_gen",strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "agency_gen",sequenceName = "agency_seq",allocationSize = 1)
+    @GeneratedValue(generator = "agency_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "agency_gen", sequenceName = "agency_seq", allocationSize = 1)
     private Long id;
     private String name;
     private String phoneNumber;
-    @OneToOne(mappedBy = "agency",cascade = {PERSIST,DETACH,REMOVE})
+    @ToString.Exclude
+    @OneToOne( cascade = {
+            PERSIST,
+            MERGE,
+            REMOVE}, optional = false)
     private Address address;
-    @ManyToMany(mappedBy = "agencies",fetch = FetchType.EAGER,cascade = {REFRESH,DETACH,MERGE})
-    private List<Owner>owners;
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<RentInfo>rentInfos;
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "agencies", cascade =
+            {REFRESH,
+                    MERGE,
+                    REMOVE}, fetch = FetchType.LAZY)
+    private List<Owner> owners;
+    @ToString.Exclude
+    @OneToMany(cascade = {
+            MERGE
+            , REMOVE,
+            REFRESH})
+    private List<RentInfo> rentInfos;
 
     public Agency(String name, String phoneNumber, Address address) {
         this.name = name;

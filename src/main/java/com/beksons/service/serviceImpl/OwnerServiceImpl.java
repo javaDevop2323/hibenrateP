@@ -2,7 +2,6 @@ package com.beksons.service.serviceImpl;
 
 import com.beksons.doa.OwnerDao;
 import com.beksons.doa.daoImpl.OwnerDaoImpl;
-import com.beksons.dto.OwnerResponse;
 import com.beksons.entities.House;
 import com.beksons.entities.Owner;
 import com.beksons.service.OwnerService;

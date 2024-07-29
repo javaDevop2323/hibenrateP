@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
+
     String saveCustomer(Customer customer);
 
     String saveCustomerWithRentInfo(Customer customer , Long houseId, Long agencyId, LocalDate checkIn, LocalDate checkOut);
-
-
-    String assignRentInfoToCustomer(RentInfo rentInfo, Long customerId, Long houseId, Long agencyId);
 
 
     List<Customer> getAllCustomers();
