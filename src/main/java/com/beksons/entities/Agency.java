@@ -1,13 +1,15 @@
 package com.beksons.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 
-@Entity
+@Entity(name = "agency_entity")
 @Table(name = "agencies")
 @Getter
 @Setter
@@ -16,15 +18,17 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 @ToString
 public class Agency {
-
     @Id
     @GeneratedValue(generator = "agency_gen", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "agency_gen", sequenceName = "agency_seq", allocationSize = 1)
     private Long id;
+    @NotEmpty
     private String name;
+
+    @Length(max = 13)
     private String phoneNumber;
     @ToString.Exclude
-    @OneToOne( cascade = {
+    @OneToOne(cascade = {
             PERSIST,
             MERGE,
             REMOVE}, optional = false)

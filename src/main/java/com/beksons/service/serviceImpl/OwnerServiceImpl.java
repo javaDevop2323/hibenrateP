@@ -45,4 +45,9 @@ public class OwnerServiceImpl implements OwnerService {
     public String updateOwner(Long ownerId, Owner newOwner) {
         return ownerDao.updateOwner(ownerId,newOwner);
     }
+
+    @Override
+    public List<Owner> getOwnersByNeighborhood(String neighborhood) {
+        return List.of();
+    }
 }

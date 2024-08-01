@@ -17,4 +17,5 @@ public interface HouseDao {
     List<House> getHouseByOwnerId(Long ownerId);
 
 
+
 }

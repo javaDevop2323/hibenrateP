@@ -2,15 +2,19 @@ package com.beksons.entities;
 
 import com.beksons.enums.Gender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static jakarta.persistence.CascadeType.*;
 
-@Entity
+@Entity(name = "owner_entity")
 @Table(name = "owners")
 @Getter
 @Setter
@@ -28,12 +32,17 @@ public class Owner {
     private String fullName;
     @ToString.Exclude
     @Column(name = "first_name")
+    @Size(min = 5,max = 10)
     private String firstName;
     @ToString.Exclude
     @Column(name = "last_name")
+    @Size(min = 5,max = 10)
     private String lastName;
+    @Email(message = "Invalid email address")
+    @Column(name = "user_name")
     private String email;
 
+    @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -78,6 +87,17 @@ public class Owner {
 
 
     }
-}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Owner owner = (Owner) o;
+        return Objects.equals(id, owner.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+}}
 
 

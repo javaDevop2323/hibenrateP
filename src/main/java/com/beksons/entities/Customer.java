@@ -7,13 +7,14 @@ import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDeletes;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.DETACH;
 import static jakarta.persistence.CascadeType.REFRESH;
 
-@Entity
+@Entity(name = "customer_entity")
 @Table(name = "customers")
 @Getter
 @Setter
@@ -29,9 +30,11 @@ public class Customer {
     @Formula("concat(first_name, ' ', last_name)")
     private String fullName;
     @ToString.Exclude
+    @Size(min = 5,max = 10)
     @Column(name = "first_name")
     private String firstName;
     @ToString.Exclude
+    @Size(min = 5,max = 15)
     @Column(name = "last_name")
     private String lastName;
     private String email;

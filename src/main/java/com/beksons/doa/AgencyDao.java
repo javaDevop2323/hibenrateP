@@ -22,4 +22,10 @@ public interface AgencyDao {
     void deleteAgency(Long id);
 
 
+    String updateAgencyAddress(Long id, Address newAddress);
+
+    List<Agency> getAgenciesByCity(String city);
+
+
+
 }

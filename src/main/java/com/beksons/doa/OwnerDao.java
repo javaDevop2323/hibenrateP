@@ -28,5 +28,10 @@ public interface OwnerDao {
 
     String updateOwner(Long ownerId, Owner newOwner);
 
+    List<Owner>sortByName(String ascOrDesc);
+
+
+
+
 
 }

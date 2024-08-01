@@ -7,7 +7,7 @@ import javax.crypto.Mac;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+@Entity(name = "rent_info_entity")
 @Table()
 @Getter
 @Setter
@@ -34,4 +34,5 @@ public class RentInfo {
 
     @OneToOne
     private House house;
+
 }

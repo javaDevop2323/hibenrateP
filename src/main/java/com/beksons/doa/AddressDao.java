@@ -23,6 +23,9 @@ public interface AddressDao {
 
     String updateAddress(Long oldAddressId, Address newAddress);
 
+    Map<Address, List<Agency>> getAllAddressWithAgenciesSortedByAddress();
+
+
 
 
 }

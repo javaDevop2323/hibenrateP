@@ -6,6 +6,7 @@ import com.beksons.entities.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 
@@ -67,7 +68,7 @@ public class CustomerDaoImpl implements CustomerDao, AutoCloseable {
         List<Customer> customers = null;
         try (final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             try {
-                customers = entityManager.createQuery("select c from  Customer c ", Customer.class).getResultList();
+                customers = entityManager.createQuery("select c from  customer_entity c ", Customer.class).getResultList();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -95,7 +96,7 @@ public class CustomerDaoImpl implements CustomerDao, AutoCloseable {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            entityManager.createQuery("update Customer c set c.firstName = :firstName," +
+            entityManager.createQuery("update customer_entity c set c.firstName = :firstName," +
                             "  c.lastName = :lastName, " +
                             "c.email = :email ,c.nationality = :nationality,c.dateOfBirth " +
                             "= :date,c.gender = :gender,c.familyStatus = :fam where c.id = :customerId")
@@ -150,9 +151,23 @@ public class CustomerDaoImpl implements CustomerDao, AutoCloseable {
         }
     }
 
+    @Override
+    public List<Customer> sortByName(String ascOrDesc) {
+        final EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String order = ascOrDesc.equalsIgnoreCase("ASC") ? "ASC" : "DESC";
+
+            String jpql = "SELECT c FROM Customer c ORDER BY c.name " + order;
+            return entityManager.createQuery(jpql, Customer.class)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
     private boolean checkHouseRent(EntityManager entityManager, Long houseId, LocalDate checkIn, LocalDate checkOut) {
         Long count = entityManager.createQuery(
-                        "select count(r) from RentInfo r where r.house.id = :houseId " +
+                        "select count(r) from rent_info_entity r where r.house.id = :houseId " +
                                 "and (r.checkIn <= :checkOut and r.checkOut >= :checkIn)", Long.class)
                 .setParameter("houseId", houseId)
                 .setParameter("checkIn", checkIn)

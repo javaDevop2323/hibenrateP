@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -124,7 +125,7 @@ public class OwnerDaoImpl implements OwnerDao, AutoCloseable {
         List<Owner> owners = new ArrayList<>();
         try {
             entityManager.getTransaction().begin();
-            owners = entityManager.createQuery("select o from Owner o join o.agencies a" +
+            owners = entityManager.createQuery("select o from owner_entity o join o.agencies a" +
                             " where a.id =:agencyId", Owner.class)
                     .setParameter("agencyId", agencyId)
                     .getResultList();
@@ -144,7 +145,7 @@ public class OwnerDaoImpl implements OwnerDao, AutoCloseable {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            owners = entityManager.createQuery("select o from Owner o", Owner.class).getResultList();
+            owners = entityManager.createQuery("select o from owner_entity o", Owner.class).getResultList();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -160,7 +161,7 @@ public class OwnerDaoImpl implements OwnerDao, AutoCloseable {
         try {
             entityManager.getTransaction().begin();
             entityManager.createQuery(
-                            "update Owner o set o.firstName = :firstName, " +
+                            "update owner_entity o set o.firstName = :firstName, " +
                                     "o.lastName = :lastName, " +
                                     "o.email = :email, " +
                                     "o.fullName = concat(:firstName, ' ', :lastName), " +
@@ -183,6 +184,31 @@ public class OwnerDaoImpl implements OwnerDao, AutoCloseable {
             entityManager.close();
         }
     }
+
+    @Override
+    public List<Owner> sortByName(String ascOrDesc) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Owner> owners;
+        try {
+            if ("asc".equalsIgnoreCase(ascOrDesc)) {
+                owners = entityManager.createQuery("SELECT ow FROM owner_entity ow ORDER BY ow.firstName ASC", Owner.class)
+                        .getResultList();
+            } else if ("desc".equalsIgnoreCase(ascOrDesc)) {
+                owners = entityManager.createQuery("SELECT ow FROM owner_entity ow ORDER BY ow.firstName DESC", Owner.class)
+                        .getResultList();
+            } else {
+                throw new IllegalArgumentException("Недопустимый порядок сортировки: " + ascOrDesc);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            owners = Collections.emptyList();
+        } finally {
+            entityManager.close();
+        }
+        return owners;
+    }
+
+
 
     @Override
     public void close() throws Exception {

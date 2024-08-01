@@ -48,7 +48,7 @@ public class HouseDaoImpl implements HouseDao {
         try {
             entityManager.getTransaction().begin();
             Long count = (Long) entityManager.createQuery(
-                            "select count(r) from RentInfo r where r.house.id = :houseId")
+                            "select count(r) from rent_info_entity r where r.house.id = :houseId")
                     .setParameter("houseId", houseId)
                     .getSingleResult();
 
@@ -56,7 +56,7 @@ public class HouseDaoImpl implements HouseDao {
                 entityManager.getTransaction().rollback();
                 return "House has active rentInfo records and cannot be deleted";
             }
-            entityManager.createQuery("delete from House h where h.id = :houseId")
+            entityManager.createQuery("delete from house_entity h where h.id = :houseId")
                     .setParameter("houseId", houseId)
                     .executeUpdate();
 
@@ -75,7 +75,7 @@ public class HouseDaoImpl implements HouseDao {
     @Override
     public List<House> getAllHouseByRegion(String region) {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
-        TypedQuery<House> query = entityManager.createQuery("SELECT h FROM House h JOIN h.address a WHERE a.region = :region", House.class);
+        TypedQuery<House> query = entityManager.createQuery("SELECT h FROM house_entity h JOIN h.address a WHERE a.region = :region", House.class);
         query.setParameter("region", region);
         return query.getResultList();
     }
@@ -83,7 +83,7 @@ public class HouseDaoImpl implements HouseDao {
     @Override
     public List<House> getHouseByAgencyId(Long id) {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
-        return entityManager.createQuery("select h from  House h  join h.address a join a.agency ag where ag.id= :id ",House.class)
+        return entityManager.createQuery("select h from  house_entity h  join h.address a join a.agency ag where ag.id= :id ",House.class)
                 .setParameter("id",id)
                 .getResultList();
 
@@ -92,7 +92,7 @@ public class HouseDaoImpl implements HouseDao {
     @Override
     public List<House> getHouseByOwnerId(Long ownerId) {
       try(  final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-     return    entityManager.createQuery("select h from House h join h.owner o where o.id = ?1", House.class)
+     return    entityManager.createQuery("select h from house_entity h join h.owner o where o.id = ?1", House.class)
                   .setParameter(1, ownerId).
                   getResultList();
       }catch (HibernateException exception){
@@ -100,4 +100,5 @@ public class HouseDaoImpl implements HouseDao {
       }
         return new ArrayList<>();
     }
+
 }

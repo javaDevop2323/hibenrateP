@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 import static jakarta.persistence.CascadeType.*;
 
-@Entity
+@Entity(name = "house_entity")
 @Table(name = "houses")
 @Getter
 @Setter
@@ -24,6 +24,7 @@ public class House {
     private HouseType houseType;
     private BigDecimal price;
     private double rating;
+    @Lob
     private String description;
     private int room;
     private boolean furniture;

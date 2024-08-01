@@ -25,6 +25,8 @@ public interface CustomerDao {
 
     String deleteCustomer(Long customerId);
 
+    List<Customer> sortByName(String ascOrDesc);
+
 
 
 

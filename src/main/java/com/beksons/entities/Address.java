@@ -6,7 +6,7 @@ import lombok.*;
 
 import static jakarta.persistence.CascadeType.*;
 
-@Entity
+@Entity(name = "address_entity")
 @Table
 @Getter
 @Setter

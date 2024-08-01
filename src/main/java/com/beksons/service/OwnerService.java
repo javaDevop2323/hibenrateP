@@ -26,5 +26,6 @@ public interface OwnerService {
 
     String updateOwner(Long ownerId, Owner newOwner);
 
+    List<Owner> getOwnersByNeighborhood(String neighborhood);
 
 }
