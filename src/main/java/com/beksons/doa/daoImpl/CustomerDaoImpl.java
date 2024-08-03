@@ -8,7 +8,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.transaction.Transactional;
 import org.hibernate.HibernateException;
-import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;

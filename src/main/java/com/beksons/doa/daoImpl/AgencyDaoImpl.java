@@ -22,7 +22,6 @@ public class AgencyDaoImpl implements AgencyDao {
     public void saveAgency(Agency agency, Address address) {
         final EntityManager entityManager = entityManagerFactory.createEntityManager();
         boolean isAgencyExists = false;
-
         try {
             for (Agency existingAgency : getAllAgencies()) {
                 if (existingAgency.getName().equals(agency.getName())) {
@@ -130,7 +129,9 @@ public class AgencyDaoImpl implements AgencyDao {
             System.out.println(e.getMessage());
             entityManager.getTransaction().rollback();
         } finally {
-            entityManager.close();
+            if(entityManager.isOpen()){
+                entityManager.close();
+            }
         }
 
     }
@@ -183,6 +184,7 @@ public class AgencyDaoImpl implements AgencyDao {
                 entityManager.close();
             }
         }
+
         return agencies;
     }
 }

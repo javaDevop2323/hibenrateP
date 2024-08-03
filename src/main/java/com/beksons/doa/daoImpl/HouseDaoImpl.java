@@ -92,7 +92,8 @@ public class HouseDaoImpl implements HouseDao {
     @Override
     public List<House> getHouseByOwnerId(Long ownerId) {
       try(  final EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-     return    entityManager.createQuery("select h from house_entity h join h.owner o where o.id = ?1", House.class)
+     return    entityManager.createQuery(
+             "select h from house_entity h join h.owner o where o.id = ?1", House.class)
                   .setParameter(1, ownerId).
                   getResultList();
       }catch (HibernateException exception){

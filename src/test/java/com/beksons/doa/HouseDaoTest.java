@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 public class HouseDaoTest extends TestCase {
 
+
     public void testCreateHouse() {
 
     }

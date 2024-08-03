@@ -17,5 +17,6 @@ public class AddressServiceImplTest extends TestCase {
     }
 
     public void testUpdateAddress() {
+
     }
 }

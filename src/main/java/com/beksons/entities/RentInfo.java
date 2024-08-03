@@ -16,8 +16,10 @@ import java.util.List;
 @Builder
 public class RentInfo {
     @Id
-    @GeneratedValue(generator = "rent_info_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "rent_info_gen", sequenceName = "rent_info_seq", allocationSize = 1)
+    @GeneratedValue(
+            generator = "rent_info_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "rent_info_gen", sequenceName = "rent_info_seq", allocationSize = 1)
     private Long id;
     private LocalDate checkIn;
     private LocalDate checkOut;
